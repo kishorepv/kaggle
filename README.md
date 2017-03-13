@@ -1,2 +1,2 @@
 # kaggle
-Kaggle competition code and libraries
+Kaggle libraries and utility functions
