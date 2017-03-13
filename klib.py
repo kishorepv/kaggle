@@ -51,3 +51,33 @@ def create_validation_data(train_dir, percent=0.1, sep='/'):
             files=random.sample(all_files, int(len(all_files)*percent))
             for onefile in files:
                 shutil.move(onefile, valid_subdir)
+
+def unzip_me(zipfile, flag=None, flag_arg=None):
+    """
+        Unzip files with optinal flags support
+    """
+    arg_data="-{} {}".format(flag, flag_arg if flag_arg else '') if flag else ''
+    cmd="unzip {} {}".format(arg_data, zipfile)
+    print("CMD: ", cmd)
+    code=os.system(cmd)
+    return code
+
+def viz_images(path, number_per_class=4, figure_size=(7,7)):
+    """
+        Visualize images in a neat manner, one row per class
+    """
+    number_per_class=max(1, min(number_per_class, 5))
+    classes=sorted([categ for categ in glob.glob(os.path.join(path,'*')) if os.path.isdir(categ)])
+    if not classes:
+        raise Exception("No directory for categories.")
+    fig=plt.figure(figsize=figure_size)
+    G=gridspec.GridSpec(len(classes), number_per_class)
+    for x,dir_ in enumerate(classes):
+        for col,file_ in enumerate(np.random.choice(glob.glob(os.path.join(dir_,'*')), size=number_per_class, replace=False)):
+            subp=fig.add_subplot(G[x,col])
+            subp.set_title(os.path.split(file_)[-1],fontsize=8, ha="center")
+            if not col: subp.set_ylabel(os.path.split(os.path.split(file_)[0])[-1], rotation=0, labelpad=12, fontsize=14)
+            subp.set_xticks([])
+            subp.set_yticks([])
+            subp.imshow(mpimg.imread(file_))
+    fig.tight_layout()
