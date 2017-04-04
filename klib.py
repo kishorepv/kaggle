@@ -4,6 +4,16 @@ import shutil
 import random
 
 def make_sample(sample_dir, train_dir, valid_dir, test_dir, size=10, sep='/'):
+    """
+        Creates sample from given data
+
+        :sample_dir: path of sample directory (contains train,test and valid directories within)
+        :train_dir:  training data directory
+        :valid_dir:  validation data directory
+        :test_dir:   test data directory
+
+        :returns: None
+    """
     if not os.path.isdir(sample_dir):
         os.mkdir(sample_dir)
     #train_name=train_dir.split(sep)[-1]
@@ -40,6 +50,15 @@ def create_train_valid_sample(src_dir, dest_dir, size, sep):
                 shutil.copy2(onefile, dest_subdir)
 
 def create_validation_data(train_dir, percent=0.1, sep='/'):
+    """
+        Create validation data, split from train data
+
+        :train_dir: training data directory
+        :percent:   percentage of train data to use as validation data
+        :sep:       path name seperator (defaults to Linux style)
+
+        :returns: None
+    """
     valid_dir=os.path.join(sep.join(train_dir.split(sep)[:-1]), "valid")
     os.mkdir(valid_dir)
     for dir_ in glob.glob(os.path.join(train_dir,"*")):
@@ -54,7 +73,13 @@ def create_validation_data(train_dir, percent=0.1, sep='/'):
 
 def unzip_me(zipfile, flag=None, flag_arg=None):
     """
-        Unzip files with optinal flags support
+        Unzip files with optional flags support
+
+        :zipfile:  the zip file
+        :flag:     flags for the Linux unzip command (ex: d for -d flag of unzip which specifies the destination directory)
+        :flag_arg: value for flag if required (ex: d flag requires the destination directory name as a flag_arg)
+
+        :returns: os.system return value
     """
     arg_data="-{} {}".format(flag, flag_arg if flag_arg else '') if flag else ''
     cmd="unzip {} {}".format(arg_data, zipfile)
@@ -64,7 +89,13 @@ def unzip_me(zipfile, flag=None, flag_arg=None):
 
 def viz_images(path, number_per_class=4, figure_size=(7,7)):
     """
-        Visualize images in a neat manner, one row per class
+        Visualize (random) images in a neat manner, one row per class
+
+        :path:             path to directory containing images, with seperate subdirectory for each category
+        :number_per_class: number of iamges from each category (defaults to 5)
+        :figure_size:      figsize arg for matplotlib figure
+
+        :returns: None
     """
     number_per_class=max(1, min(number_per_class, 5))
     classes=sorted([categ for categ in glob.glob(os.path.join(path,'*')) if os.path.isdir(categ)])
@@ -84,12 +115,11 @@ def viz_images(path, number_per_class=4, figure_size=(7,7)):
 
 def file_head(fpath, limit=5):
     """
-        Display first :limnit: lines of file
+        Display first :limit: lines of file
 
         :limit: number of lines to display
         :returns: first :limnit: lines of file
     """
-
     limit=max(1,int(limit))
     with open(fpath) as f:
         for index,line in enumerate(f):
