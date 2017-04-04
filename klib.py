@@ -81,3 +81,17 @@ def viz_images(path, number_per_class=4, figure_size=(7,7)):
             subp.set_yticks([])
             subp.imshow(mpimg.imread(file_))
     fig.tight_layout()
+
+def file_head(fpath, limit=5):
+    """
+        Display first :limnit: lines of file
+
+        :limit: number of lines to display
+        :returns: first :limnit: lines of file
+    """
+
+    limit=max(1,int(limit))
+    with open(fpath) as f:
+        for index,line in enumerate(f):
+            print(line)
+            if index+1==limit: break
